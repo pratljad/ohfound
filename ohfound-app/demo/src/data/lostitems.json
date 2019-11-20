@@ -1,0 +1,43 @@
+{
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "ITEM_ID": 1,
+                "ITEM_NAME": "iPhone 6S+",
+                "ITEM_DESCRIPTION": ["Grey IPHONE 6S+", "Blue Tomato sticker on the back", "Background image shows couple sitting on the lake"]
+            },
+            "geometry": {
+                "type": "point",
+                "latitude": 46.604027,
+                "longitude": 13.852215
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "ITEM_ID": 2,
+                "ITEM_NAME": "Apple Airpods",
+                "ITEM_DESCRIPTION": ["White AirPods Case with scratches", "Black Protection Case", "Right AirPod missing"]
+            },
+            "geometry": {
+                "type": "point",
+                "latitude": 46.60497,
+                "longitude": 13.840714
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "ITEM_ID": 3,
+                "ITEM_NAME": "Armani Wallet",
+                "ITEM_DESCRIPTION": ["Black colored wallet"]
+            },
+            "geometry": {
+                "type": "point",
+                "latitude": 46.598955,
+                "longitude": 13.837624
+            }
+        }
+    ]
+}
