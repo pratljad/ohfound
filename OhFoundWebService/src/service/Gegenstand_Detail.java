@@ -45,7 +45,7 @@ public class Gegenstand_Detail {
 			response.status(Response.Status.BAD_REQUEST);
 			response.entity("[ERROR] " + e.getMessage());
 		}
-		System.out.println("======================webservice GET called");
+		System.out.println("====================== webservice GET called");
 		return response.build();
 	}
 
@@ -54,7 +54,7 @@ public class Gegenstand_Detail {
 	public Response newGegenstand(String gegenstand) throws Exception {
 		Response.ResponseBuilder response = Response.status(Response.Status.CREATED);
 		DatabaseManager db = DatabaseManager.getInstance();
-		System.out.println("======================NEW Gegenstand: " + gegenstand);
+		System.out.println("====================== NEW Gegenstand: " + gegenstand);
 
 		try {
 			Gegenstand newGegenstand = new Gson().fromJson(gegenstand, Gegenstand.class);

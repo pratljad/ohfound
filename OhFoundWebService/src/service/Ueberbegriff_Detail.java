@@ -1,7 +1,6 @@
 package service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,8 +14,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.apache.tomcat.util.buf.UEncoder;
 
 import com.google.gson.Gson;
 
