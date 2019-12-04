@@ -1,0 +1,67 @@
+package bll;
+
+import java.awt.Image;
+import java.sql.Blob;
+
+
+public class Gegenstand {
+	
+	private int id;
+	private Ueberbegriff ueberbegriff;
+	private String beschreibung;
+	private String ort;
+	private Blob image;   //keine ahnung ob blob oder image
+	 
+	public Gegenstand() {
+		
+	}
+	
+	public Gegenstand(int id, Ueberbegriff ueberbegriff, String beschreibung, String ort, Blob image) {
+		super();
+		this.id = id;
+		this.ueberbegriff = ueberbegriff;
+		this.beschreibung = beschreibung;
+		this.ort = ort;
+		this.image = image;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Ueberbegriff getUeberbegriff() {
+		return ueberbegriff;
+	}
+
+	public void setUeberbegriff(Ueberbegriff ueberbegriff) {
+		this.ueberbegriff = ueberbegriff;
+	}
+
+	public String getBeschreibung() {
+		return beschreibung;
+	}
+
+	public void setBeschreibung(String beschreibung) {
+		this.beschreibung = beschreibung;
+	}
+
+	public String getOrt() {
+		return ort;
+	}
+
+	public void setOrt(String ort) {
+		this.ort = ort;
+	}
+
+	public Blob getImage() {
+		return image;
+	}
+
+	public void setImage(Blob image) {
+		this.image = image;
+	}
+}
