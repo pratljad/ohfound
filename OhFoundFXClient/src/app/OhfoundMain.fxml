@@ -19,9 +19,9 @@
       <Button fx:id="btnAddGegenstand" layoutX="977.0" layoutY="698.0" mnemonicParsing="false" onAction="#btnAddGegenstandAction" text="Add" />
       <Button fx:id="btnDeleteGegenstand" layoutX="1039.0" layoutY="698.0" mnemonicParsing="false" onAction="#btnDeleteGegenstandAction" text="Delete" />
       <Button fx:id="btnUpdateGegenstand" layoutX="1109.0" layoutY="698.0" mnemonicParsing="false" onAction="#btnUpdateGegenstandAction" text="Update" />
-      <ImageView fx:id="ivGegenstand" fitHeight="302.0" fitWidth="439.0" layoutX="797.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ivGegenstand" fitHeight="302.0" fitWidth="439.0" layoutX="760.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../Picture/Download.jpg" />
+            <Image url="@../pic/Download.jpg" />
          </image>
       </ImageView>
    </children>
