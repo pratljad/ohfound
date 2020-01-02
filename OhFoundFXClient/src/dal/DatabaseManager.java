@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import com.google.gson.JsonSyntaxException;
 
 import bll.Gegenstand;
+import bll.Ueberbegriff;
 
 public class DatabaseManager {
 	
@@ -107,6 +108,84 @@ public class DatabaseManager {
 
 		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.put(Entity.entity(gegenstand, MediaType.APPLICATION_JSON));
+
+		System.out.println(response.getStatus());
+		System.out.println(response.readEntity(String.class));
+		if (response.getStatus() == 201) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public ArrayList<Ueberbegriff> getUeberbegriff() throws Exception {
+
+		String retUeberbegriffAsJson = null;
+		List<Ueberbegriff> ueberbegriffAsList = null;
+
+		Invocation.Builder invocationBuilder = null;
+		Response response = null;
+
+		try {
+			WebTarget webtarget = this.webTargetUeberbegriffListe.path("alleUeberbegriffe");
+			invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+			response = invocationBuilder.accept(MediaType.APPLICATION_JSON).get();
+			ueberbegriffAsList = response.readEntity(new GenericType<List<Ueberbegriff>>() {
+			});
+			System.out.println(response.getStatus());
+
+		} catch (JsonSyntaxException ex) {
+			throw new Exception(retUeberbegriffAsJson);
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage());
+		}
+
+		return (ArrayList) ueberbegriffAsList;
+	}
+	
+	public Ueberbegriff getUeberbegriff(int id) {
+
+		WebTarget webtarget = this.webTargetUeberbegriffDetail.path(String.valueOf(id));
+		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.accept(MediaType.APPLICATION_JSON).get();
+		Ueberbegriff ueberbegriff = response.readEntity(Ueberbegriff.class);
+		System.out.println(response.getStatus());
+		System.out.println(ueberbegriff);
+		return ueberbegriff;
+	}
+
+	public boolean addUeberbegriff(Ueberbegriff ueberbegriff) {
+
+		Invocation.Builder invocationBuilder = this.webTargetUeberbegriffDetail.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(ueberbegriff, MediaType.APPLICATION_JSON));
+
+		System.out.println(response.getStatus());
+		System.out.println(response.readEntity(String.class));
+		if (response.getStatus() == 201) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean removeUeberbegriff(int id) {
+		WebTarget webtarget = this.webTargetUeberbegriffDetail.path(String.valueOf(id));
+		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.delete();
+
+		System.out.println(response.getStatus());
+		if (response.getStatus() == 201) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean updateUeberbegriff(Ueberbegriff ueberbegriff) {
+		WebTarget webtarget = this.webTargetUeberbegriffDetail.path(String.valueOf(ueberbegriff.getId()));
+
+		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.put(Entity.entity(ueberbegriff, MediaType.APPLICATION_JSON));
 
 		System.out.println(response.getStatus());
 		System.out.println(response.readEntity(String.class));
