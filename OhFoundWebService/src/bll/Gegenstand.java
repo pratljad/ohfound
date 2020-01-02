@@ -10,13 +10,13 @@ public class Gegenstand {
 	private Ueberbegriff ueberbegriff;
 	private String beschreibung;
 	private String ort;
-	private Blob image;   //keine ahnung ob blob oder image
+	private byte[] image;   //keine ahnung ob blob oder image
 	 
 	public Gegenstand() {
 		
 	}
 	
-	public Gegenstand(int id, Ueberbegriff ueberbegriff, String beschreibung, String ort, Blob image) {
+	public Gegenstand(int id, Ueberbegriff ueberbegriff, String beschreibung, String ort, byte[] image) {
 		super();
 		this.id = id;
 		this.ueberbegriff = ueberbegriff;
@@ -57,11 +57,11 @@ public class Gegenstand {
 		this.ort = ort;
 	}
 
-	public Blob getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(Blob image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 }

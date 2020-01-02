@@ -137,7 +137,7 @@ public class DatabaseManager {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next())
 			allGegenstaende.add(new Gegenstand(rs.getInt("id"), getUeberbegriff(rs.getInt("ueberbegriff_Id")),
-					rs.getString("beschreibung"), rs.getString("ort"), (Blob) rs.getBlob("image")));
+					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image")));
 		conn.close();
 		return allGegenstaende;
 	}
@@ -151,7 +151,7 @@ public class DatabaseManager {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next())
 			gegenstand = new Gegenstand(rs.getInt("id"), getUeberbegriff(rs.getInt("ueberbegriff_Id")),
-					rs.getString("beschreibung"), rs.getString("ort"), (Blob) rs.getBlob("image"));
+					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image"));
 		conn.close();
 		return gegenstand;
 	}
@@ -161,11 +161,12 @@ public class DatabaseManager {
 
 		conn = createConnection();
 		
-		stmt = conn.prepareStatement("INSERT INTO Gegenstand (Ueberbegriff_Id, Beschreibung,  Ort, Image)  VALUES (?,?,?,?)");
+		stmt = conn.prepareStatement("INSERT INTO Gegenstand (Ueberbegriff_Id,Beschreibung,  Ort, Image)  VALUES (?,?,?,?)");
 		stmt.setInt(1, gegenstand.getUeberbegriff().getId());
 		stmt.setString(2, gegenstand.getBeschreibung());
 		stmt.setString(3, gegenstand.getOrt());
-		stmt.setBlob(4, gegenstand.getImage());
+        stmt.setBytes(4, gegenstand.getImage());
+
 		stmt.execute();
 
 		stmt.close();
@@ -197,8 +198,8 @@ public class DatabaseManager {
 			stmt.setInt(1, gegenstand.getUeberbegriff().getId());
 			stmt.setString(2, gegenstand.getBeschreibung());
 			stmt.setString(3, gegenstand.getOrt());
-			stmt.setBlob(4, gegenstand.getImage());
-			
+	        stmt.setBytes(4, gegenstand.getImage());
+	        
 			stmt.execute();
 		} catch (Exception e) {
 			throw new Exception("Gegenstand: " + gegenstand + " konnte nicht upgedated werden (" + e.getMessage() + ")");
