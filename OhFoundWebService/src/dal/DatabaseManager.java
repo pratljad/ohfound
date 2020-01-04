@@ -6,11 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
+import com.google.gson.JsonElement;
 import com.mysql.jdbc.Blob;
 
 import bll.Gegenstand;
 import bll.Ueberbegriff;
+import bll.User;
+import pass.Encrypth;
 
 public class DatabaseManager {
 	
@@ -199,6 +203,7 @@ public class DatabaseManager {
 			stmt.setString(2, gegenstand.getBeschreibung());
 			stmt.setString(3, gegenstand.getOrt());
 	        stmt.setBytes(4, gegenstand.getImage());
+	        stmt.setInt(5, gegenstand.getId());
 	        
 			stmt.execute();
 		} catch (Exception e) {
@@ -212,6 +217,65 @@ public class DatabaseManager {
 			}
 		}
 	}
+
+	
+	  public Collection<Gegenstand> filterGegenstaende(String filterVal) throws Exception {
+	        ArrayList<Gegenstand> collGegenstaende = new ArrayList<>();
+
+	        conn = createConnection();
+	        String select = "SELECT Gegenstand.id,Gegenstand.Beschreibung,Ort,Gegenstand.Ueberbegriff_Id,Image FROM Gegenstand inner join Ueberbegriff on Ueberbegriff.id = Gegenstand.Ueberbegriff_Id WHERE upper(Gegenstand.Beschreibung) LIKE upper(?) or upper(Ort) LIKE upper(?)"
+	                + "  or upper(Ueberbegriff.Bezeichnung) LIKE upper(?)";
+	        PreparedStatement stmt = conn.prepareStatement(select);
+	        stmt.setString(1, "%" + filterVal + "%");
+	        stmt.setString(2, "%" + filterVal + "%");
+	        stmt.setString(3, "%" + filterVal + "%");
+
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	        	collGegenstaende.add(new Gegenstand(rs.getInt(1), getUeberbegriff(rs.getInt(4)),
+						rs.getString(2), rs.getString(3), rs.getBytes(5)));
+	        }
+	        conn.close();
+
+	        return collGegenstaende;
+	    }
+
+	public void registerUser(User user) throws Exception {
+		conn = createConnection();
+		String select = "INSERT INTO User (Vorname, Nachname, Email, Passwort, IsAdmin) VALUES(?,?,?,?,?)";
+		
+        PreparedStatement stmt = conn.prepareStatement(select);
+        stmt.setString(1, user.getVorname());
+        stmt.setString(2, user.getNachname());
+        stmt.setString(3, user.getEmail());
+        if(!user.getPasswort().equals(user.getPasswort_wiederholen()))
+        	throw new Exception("pws dont match");
+        
+        user.setPasswort(Encrypth.hashPW(user.getPasswort()));
+        stmt.setString(4, user.getPasswort());
+        stmt.setBoolean(5,false);
+        stmt.execute();
+        conn.close();
+		
+	}
+
+	public User loginUser(User user) throws Exception {
+		 conn = createConnection();
+	        String select = "SELECT * FROM User WHERE email=? and passwort=?";
+	        PreparedStatement stmt = conn.prepareStatement(select);
+	        stmt.setString(1, user.getEmail());
+	        stmt.setString(2, Encrypth.hashPW(user.getPasswort()));
+	        ResultSet rs = stmt.executeQuery();
+	        User foundUser = null;
+	        while (rs.next()) {
+	            foundUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),rs.getBoolean(6));
+	            
+	          
+	        }
+	        conn.close();
+	        return foundUser;
+	}
+	
 	
 }
 

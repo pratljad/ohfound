@@ -32,6 +32,25 @@ public class Gegenstand_Detail {
 	public Gegenstand_Detail() {
 	}
 	
+	 @GET
+	 @Produces({MediaType.APPLICATION_JSON})
+	 @Path("/filter/{filterValue}")
+	 public Response filterGegenstaende(@PathParam("filterValue") String filterValue) throws Exception {
+
+	        Response.ResponseBuilder response = Response.status(Response.Status.OK);
+			ArrayList<Gegenstand> allGegenstaende = null;
+			try {
+				allGegenstaende = (ArrayList<Gegenstand>) db.filterGegenstaende(filterValue);
+
+				response.entity(new Gson().toJson(allGegenstaende));
+			} catch (Exception ex) {
+				response.status(Response.Status.BAD_REQUEST);
+				response.entity("[ERROR] " + ex.getMessage());
+			}
+			System.out.println("======================webservice GET called");
+			return response.build();
+	    }
+	
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{gegenstandid}")
@@ -90,7 +109,7 @@ public class Gegenstand_Detail {
 	@PUT
     @Consumes({MediaType.APPLICATION_JSON})
 	@Path("{gegenstandid}")
-    public Response updateArtikel(@PathParam("artikelid") String id,String stringGegenstand) throws IOException {
+    public Response updateArtikel(@PathParam("gegenstandid") String id,String stringGegenstand) throws IOException {
         DatabaseManager db = DatabaseManager.getInstance();
         Response.ResponseBuilder response = Response.status(Response.Status.OK);
 
