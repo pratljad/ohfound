@@ -16,6 +16,7 @@ import com.google.gson.JsonSyntaxException;
 
 import bll.Gegenstand;
 import bll.Ueberbegriff;
+import bll.User;
 
 public class DatabaseManager {
 	
@@ -39,6 +40,10 @@ public class DatabaseManager {
 	WebTarget webTargetGegenstandListe = webTarget.path("OhFoundWebService/Ohfound/GegenstandListe/");
 	WebTarget webTargetUeberbegriffDetail = webTarget.path("OhFoundWebService/Ohfound/UeberbegriffDetail/");
 	WebTarget webTargetGegenstandDetail = webTarget.path("OhFoundWebService/Ohfound/GegenstandDetail/");
+	WebTarget webTargetUserDetail = webTarget.path("OhFoundWebService/Ohfound/UserDetail/");
+	
+	
+	
 
 	public ArrayList<Gegenstand> getGegenstaende() throws Exception {
 
@@ -195,7 +200,61 @@ public class DatabaseManager {
 			return false;
 		}
 	}
-	
-	
 
+	public ArrayList<Gegenstand> filterGegenstande(String filterVal) throws Exception {
+
+		String retGegenstandAsJson = null;
+		List<Gegenstand> gegenstaendeAsList = null;
+
+		Invocation.Builder invocationBuilder = null;
+		Response response = null;
+
+		try {
+			WebTarget webtarget = this.webTargetGegenstandDetail.path("filter/" + filterVal);
+			invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+			response = invocationBuilder.accept(MediaType.APPLICATION_JSON).get();
+			gegenstaendeAsList = response.readEntity(new GenericType<List<Gegenstand>>() {
+			});
+			System.out.println(response.getStatus());
+
+		} catch (JsonSyntaxException ex) {
+			throw new Exception(retGegenstandAsJson);
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage());
+		}
+
+		return (ArrayList) gegenstaendeAsList;
+	}
+	
+	public boolean registerUser(User user) {
+
+		WebTarget webtarget = this.webTargetUserDetail.path("register");
+		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(user, MediaType.APPLICATION_JSON));
+
+		System.out.println(response.getStatus());
+		System.out.println(response.readEntity(String.class));
+		if (response.getStatus() == 201) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean loginUser(User user) {
+
+		WebTarget webtarget = this.webTargetUserDetail.path("login");
+		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(user, MediaType.APPLICATION_JSON));
+
+		System.out.println(response.getStatus());
+		System.out.println(response.readEntity(String.class));
+		if (response.getStatus() == 201) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
 }
