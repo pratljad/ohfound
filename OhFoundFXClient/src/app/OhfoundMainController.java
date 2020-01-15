@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import bll.Gegenstand;
 import bll.Ueberbegriff;
+import bll.User;
 import dal.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -58,16 +60,34 @@ public class OhfoundMainController implements Initializable {
 
 	@FXML
 	private ImageView ivGegenstand;
-	
-    @FXML
-    private TextField tfFilter;
+
+	@FXML
+	private TextField tfFilter;
+
+	@FXML
+	private Label lbUser;
 
 	private DatabaseManager db = null;
+
+	private static User curUser = null;
+
+	public static User getCurUser() {
+		return curUser;
+	}
+
+	public static void setCurUser(User isAdmin) {
+		OhfoundMainController.curUser = isAdmin;
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		db = DatabaseManager.newInstance();
+
+		lbUser.setText(curUser.getVorname());
+
+		btnDeleteGegenstand.setDisable(true);
+		btnUpdateGegenstand.setDisable(true);
 
 		tcGegId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tcGegUeberbegriff.setCellValueFactory(new PropertyValueFactory<>("ueberbegriff"));
@@ -77,56 +97,55 @@ public class OhfoundMainController implements Initializable {
 		fillTable();
 
 		tvGegenstaende.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-		    if (newSelection != null) {
+			if (newSelection != null) {
+//				System.out.println("mkdsf" + newSelection.getUser());
+//
+//				System.out.println("mkdsf" + curUser);
+
 				Image img = new Image(new ByteArrayInputStream(newSelection.getImage()));
 				ivGegenstand.setImage(img);
-		    }
+
+				if (newSelection.getUser().equals(curUser) || curUser.getIsAdmin()) {
+					System.out.println("okoko");
+					btnDeleteGegenstand.setDisable(false);
+					btnUpdateGegenstand.setDisable(false);
+				} else {
+					btnDeleteGegenstand.setDisable(true);
+					btnUpdateGegenstand.setDisable(true);
+
+				}
+			}
 		});
 	}
 
-	  @FXML
-	    void onPress(KeyEvent event) {
-	        try {
-	            if (event.getCode() == KeyCode.ENTER && event.getSource().equals(tfFilter)) {
-	            	System.out.println("okok");
-	                filterGegenstaende();
-	            }
-	        } catch (Exception ex) {
-				ex.printStackTrace();
-	        }
-	    }
-	  
-	private void filterGegenstaende() throws Exception{
-		 ArrayList<Gegenstand> filteredGegenstand;
-	        String filterVal = tfFilter.getText();
-	        if (filterVal.isEmpty()) {
-	            filteredGegenstand = db.getGegenstaende();
-	        } else {
-	            filteredGegenstand = db.filterGegenstande(filterVal);
-	            System.out.println(filteredGegenstand);
-	        }
-	        tvGegenstaende.getItems().setAll(filteredGegenstand);
+	@FXML
+	void onPress(KeyEvent event) {
+		try {
+			if (event.getCode() == KeyCode.ENTER && event.getSource().equals(tfFilter)) {
+				//System.out.println("okok");
+				filterGegenstaende();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void filterGegenstaende() throws Exception {
+		ArrayList<Gegenstand> filteredGegenstand;
+		String filterVal = tfFilter.getText();
+		if (filterVal.isEmpty()) {
+			filteredGegenstand = db.getGegenstaende();
+		} else {
+			filteredGegenstand = db.filterGegenstande(filterVal);
+			System.out.println(filteredGegenstand);
+		}
+		tvGegenstaende.getItems().setAll(filteredGegenstand);
 	}
 
 	@FXML
 	void btnAddGegenstandAction(ActionEvent event) {
 
 		try {
-			/*
-			 * FXMLLoader loader = new
-			 * FXMLLoader(getClass().getResource("./GegenstandController.fxml"));
-			 * 
-			 * Parent root;
-			 * 
-			 * root = (Parent)loader.load();
-			 * 
-			 * GegenstandController controller = loader.getController();
-			 * 
-			 * 
-			 * 
-			 * Stage stage = (Stage) btnAddGegenstand.getScene().getWindow();
-			 * stage.setScene(new Scene(root));
-			 */
 			GegenstandController.setUpdateGegenstand(null);
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("./GegenstandController.fxml"));
@@ -135,6 +154,7 @@ public class OhfoundMainController implements Initializable {
 			GegenstandController controller = loader.getController();
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
+			stage.setTitle("Neuer Gegenstand");
 			stage.show();
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				public void handle(WindowEvent we) {
@@ -160,11 +180,13 @@ public class OhfoundMainController implements Initializable {
 			}
 			db.removeGegenstand(selectedItem.getId());
 			fillTable();
+			btnDeleteGegenstand.setDisable(true);
+			btnUpdateGegenstand.setDisable(true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	@FXML
 	void btnUpdateGegenstandAction(ActionEvent event) {
@@ -181,15 +203,18 @@ public class OhfoundMainController implements Initializable {
 			GegenstandController controller = loader.getController();
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
+			stage.setTitle("Neuer Gegenstand");
 			stage.show();
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				public void handle(WindowEvent we) {
 					fillTable();
+					btnDeleteGegenstand.setDisable(true);
+					btnUpdateGegenstand.setDisable(true);
+
 				}
 			});
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 
-		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,6 +12,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import bll.Gegenstand;
@@ -57,6 +58,8 @@ public class DatabaseManager {
 			WebTarget webtarget = this.webTargetGegenstandListe.path("alleGegenstaende");
 			invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
 			response = invocationBuilder.accept(MediaType.APPLICATION_JSON).get();
+//			System.out.println(response.readEntity(String.class));
+
 			gegenstaendeAsList = response.readEntity(new GenericType<List<Gegenstand>>() {
 			});
 			System.out.println(response.getStatus());
@@ -64,6 +67,7 @@ public class DatabaseManager {
 		} catch (JsonSyntaxException ex) {
 			throw new Exception(retGegenstandAsJson);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new Exception(ex.getMessage());
 		}
 
@@ -241,19 +245,23 @@ public class DatabaseManager {
 		}
 	}
 	
-	public boolean loginUser(User user) {
+	public User loginUser(User user) throws Exception{
 
 		WebTarget webtarget = this.webTargetUserDetail.path("login");
 		Invocation.Builder invocationBuilder = webtarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(user, MediaType.APPLICATION_JSON));
 
 		System.out.println(response.getStatus());
-		System.out.println(response.readEntity(String.class));
-		if (response.getStatus() == 201) {
-			return true;
+		Gson d;
+		User u = null;
+		
+		if (response.getStatus() == 200) {
+			u = new Gson().fromJson(response.readEntity(String.class), User.class);
 		} else {
-			return false;
+			throw new Exception("login failed.wrong data"+ response.getStatus());
 		}
+		
+		return u;
 	}
 	
 	

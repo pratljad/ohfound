@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
@@ -21,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -47,36 +49,37 @@ public class GegenstandController implements Initializable {
 	@FXML
 	private Button btnBildaus;
 
+	@FXML
+	private Button btnAddUeberbegriff;
+
 	private DatabaseManager db = null;
 
 	private String imagepath;
-	
-	private static Gegenstand updatedGegenstand=null;
-	
+
+	private static Gegenstand updatedGegenstand = null;
 
 	public static void setUpdateGegenstand(Gegenstand b) {
-		updatedGegenstand=b;		
+		updatedGegenstand = b;
 	}
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		db = DatabaseManager.newInstance();
 		fillUeberbgeriffe();
-		if(updatedGegenstand!=null) {
-			System.out.println("kdjsfhsk");
+		if (updatedGegenstand != null) {
+			//System.out.println("kdjsfhsk");
 			btnOk.setText("update");
 			fillUeberbgeriffe();
 			cbUeberbegriffe.getSelectionModel().select(updatedGegenstand.getUeberbegriff());
 			tfBeschreibung.setText(updatedGegenstand.getBeschreibung());
 			tfOrt.setText(updatedGegenstand.getOrt());
-			
+
 			Image img = new Image(new ByteArrayInputStream(updatedGegenstand.getImage()));
 			ivGegenstand.setImage(img);
 		}
 	}
 
-	
 	@FXML
 	void chooseFile(ActionEvent event) {
 
@@ -85,15 +88,14 @@ public class GegenstandController implements Initializable {
 		File file = chooser.showOpenDialog(new Stage());
 		if (file != null) {
 			try {
-				
+
 				imagepath = file.getAbsolutePath();
 				Image image = new Image(file.toURI().toURL().toString());
 				ivGegenstand.setImage(image);
-				if(updatedGegenstand!=null) {
+				if (updatedGegenstand != null) {
 					updatedGegenstand.setImage(convertImageToByteArray(imagepath));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -108,44 +110,55 @@ public class GegenstandController implements Initializable {
 	@FXML
 	void saveGegenstand(ActionEvent event) {
 		try {
-			if(updatedGegenstand==null) {
+			if (updatedGegenstand == null) {
 				db.addGegenstand(new Gegenstand(-1, cbUeberbegriffe.getSelectionModel().getSelectedItem(),
-						tfBeschreibung.getText(), tfOrt.getText(), convertImageToByteArray(imagepath)));
-				
+						tfBeschreibung.getText(), tfOrt.getText(), convertImageToByteArray(imagepath),OhfoundMainController.getCurUser()));
+
 				Stage stage = (Stage) tfBeschreibung.getScene().getWindow();
 				stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-			}else {
-				
+			} else {
+
 				updatedGegenstand.setBeschreibung(tfBeschreibung.getText());
 				updatedGegenstand.setOrt(tfOrt.getText());
 				updatedGegenstand.setUeberbegriff(cbUeberbegriffe.getSelectionModel().getSelectedItem());
 				System.out.println(updatedGegenstand);
 				db.updateGegenstand(updatedGegenstand);
-				
+
 				Stage stage = (Stage) tfBeschreibung.getScene().getWindow();
 				stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-			
-			}
-			
 
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	private byte[] convertImageToByteArray(String filepath) throws Exception{
+	@FXML
+	void btnAddUeberbegriffOnAction(ActionEvent event) {
+		TextInputDialog dialog = new TextInputDialog("Überbegriff");
+		dialog.setTitle("Überbegriff");
+		dialog.setContentText("Überbegriff eingeben: ");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			db.addUeberbegriff(new Ueberbegriff(-1, result.get()));
+			fillUeberbgeriffe();
+		}
+	}
+
+	private byte[] convertImageToByteArray(String filepath) throws Exception {
 		BufferedImage bImage;
 		bImage = ImageIO.read(new File(filepath));
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(bImage, "jpg", bos);
 		return bos.toByteArray();
 	}
+
 	private void fillUeberbgeriffe() {
 		try {
 			cbUeberbegriffe.getItems().setAll(db.getUeberbegriff());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
