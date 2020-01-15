@@ -44,6 +44,7 @@ public class Gegenstand_Detail {
 
 				response.entity(new Gson().toJson(allGegenstaende));
 			} catch (Exception ex) {
+				System.out.println(ex);
 				response.status(Response.Status.BAD_REQUEST);
 				response.entity("[ERROR] " + ex.getMessage());
 			}

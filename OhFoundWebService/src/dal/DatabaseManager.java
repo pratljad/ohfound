@@ -17,7 +17,7 @@ import bll.User;
 import pass.Encrypth;
 
 public class DatabaseManager {
-	
+
 	private static DatabaseManager instance = null;
 	private static Connection conn = null;
 
@@ -51,9 +51,9 @@ public class DatabaseManager {
 		return con;
 
 	}
-	
+
 //-----------------------------Ueberbegriff---------------------------------------
-	
+
 	public ArrayList<Ueberbegriff> getAllUeberbegriff() throws Exception {
 		ArrayList<Ueberbegriff> allUeberbegriffe = new ArrayList<Ueberbegriff>();
 
@@ -66,7 +66,7 @@ public class DatabaseManager {
 		conn.close();
 		return allUeberbegriffe;
 	}
-	
+
 	public Ueberbegriff getUeberbegriff(int id) {
 		Ueberbegriff result = null;
 
@@ -84,7 +84,7 @@ public class DatabaseManager {
 		}
 		return result;
 	}
-	
+
 	public void addUeberbegriff(Ueberbegriff ueberbegriff) throws Exception {
 		PreparedStatement stmt = null;
 
@@ -96,7 +96,7 @@ public class DatabaseManager {
 		stmt.close();
 		conn.close();
 	}
-	
+
 	public void deleteUeberbegriff(int id) throws ClassNotFoundException, SQLException {
 		try {
 			PreparedStatement stmt = null;
@@ -111,7 +111,7 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void updateUeberbegriff(Ueberbegriff ueberbegriff) throws Exception {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -122,7 +122,8 @@ public class DatabaseManager {
 			stmt.setInt(2, ueberbegriff.getId());
 			stmt.execute();
 		} catch (Exception e) {
-			throw new Exception("Überbegriff: " + ueberbegriff + " konnte nicht upgedated werden (" + e.getMessage() + ")");
+			throw new Exception(
+					"Überbegriff: " + ueberbegriff + " konnte nicht upgedated werden (" + e.getMessage() + ")");
 		} finally {
 			try {
 				stmt.close();
@@ -132,6 +133,7 @@ public class DatabaseManager {
 			}
 		}
 	}
+
 //----------------------------------------Gegenstand-----------------------------------------
 	public ArrayList<Gegenstand> getAllGegenstaende() throws Exception {
 		ArrayList<Gegenstand> allGegenstaende = new ArrayList<Gegenstand>();
@@ -141,11 +143,12 @@ public class DatabaseManager {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next())
 			allGegenstaende.add(new Gegenstand(rs.getInt("id"), getUeberbegriff(rs.getInt("ueberbegriff_Id")),
-					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image")));
+					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image"),
+					getUser(rs.getInt("user_id"))));
 		conn.close();
 		return allGegenstaende;
 	}
-	
+
 	public Gegenstand getGegensatnd(int id) throws Exception {
 		Gegenstand gegenstand = null;
 
@@ -155,22 +158,23 @@ public class DatabaseManager {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next())
 			gegenstand = new Gegenstand(rs.getInt("id"), getUeberbegriff(rs.getInt("ueberbegriff_Id")),
-					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image"));
+					rs.getString("beschreibung"), rs.getString("ort"), rs.getBytes("image"),getUser(rs.getInt("user_id")));
 		conn.close();
 		return gegenstand;
 	}
-	
+
 	public void addGegenstand(Gegenstand gegenstand) throws Exception {
 		PreparedStatement stmt = null;
 
 		conn = createConnection();
-		
-		stmt = conn.prepareStatement("INSERT INTO Gegenstand (Ueberbegriff_Id,Beschreibung,  Ort, Image)  VALUES (?,?,?,?)");
+
+		stmt = conn.prepareStatement(
+				"INSERT INTO Gegenstand (Ueberbegriff_Id,Beschreibung,  Ort, Image, User_Id)  VALUES (?,?,?,?,?)");
 		stmt.setInt(1, gegenstand.getUeberbegriff().getId());
 		stmt.setString(2, gegenstand.getBeschreibung());
 		stmt.setString(3, gegenstand.getOrt());
-        stmt.setBytes(4, gegenstand.getImage());
-
+		stmt.setBytes(4, gegenstand.getImage());
+		stmt.setInt(5, gegenstand.getUser().getId());
 		stmt.execute();
 
 		stmt.close();
@@ -190,24 +194,25 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void updateGegenstand(Gegenstand gegenstand) throws Exception {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		try {
-			con = this.createConnection(); 
-			stmt = con.prepareStatement("UPDATE Gegenstand SET Ueberbegriff_Id=?,Beschreibung=?,"
-					+ "Ort=?,Image=? WHERE id=?");
-			
+			con = this.createConnection();
+			stmt = con.prepareStatement(
+					"UPDATE Gegenstand SET Ueberbegriff_Id=?,Beschreibung=?," + "Ort=?,Image=? WHERE id=?");
+
 			stmt.setInt(1, gegenstand.getUeberbegriff().getId());
 			stmt.setString(2, gegenstand.getBeschreibung());
 			stmt.setString(3, gegenstand.getOrt());
-	        stmt.setBytes(4, gegenstand.getImage());
-	        stmt.setInt(5, gegenstand.getId());
-	        
+			stmt.setBytes(4, gegenstand.getImage());
+			stmt.setInt(5, gegenstand.getId());
+
 			stmt.execute();
 		} catch (Exception e) {
-			throw new Exception("Gegenstand: " + gegenstand + " konnte nicht upgedated werden (" + e.getMessage() + ")");
+			throw new Exception(
+					"Gegenstand: " + gegenstand + " konnte nicht upgedated werden (" + e.getMessage() + ")");
 		} finally {
 			try {
 				stmt.close();
@@ -218,79 +223,85 @@ public class DatabaseManager {
 		}
 	}
 
-	
-	  public Collection<Gegenstand> filterGegenstaende(String filterVal) throws Exception {
-	        ArrayList<Gegenstand> collGegenstaende = new ArrayList<>();
+	public Collection<Gegenstand> filterGegenstaende(String filterVal) throws Exception {
+		ArrayList<Gegenstand> collGegenstaende = new ArrayList<>();
 
-	        conn = createConnection();
-	        String select = "SELECT Gegenstand.id,Gegenstand.Beschreibung,Ort,Gegenstand.Ueberbegriff_Id,Image FROM Gegenstand inner join Ueberbegriff on Ueberbegriff.id = Gegenstand.Ueberbegriff_Id WHERE upper(Gegenstand.Beschreibung) LIKE upper(?) or upper(Ort) LIKE upper(?)"
-	                + "  or upper(Ueberbegriff.Bezeichnung) LIKE upper(?)";
-	        PreparedStatement stmt = conn.prepareStatement(select);
-	        stmt.setString(1, "%" + filterVal + "%");
-	        stmt.setString(2, "%" + filterVal + "%");
-	        stmt.setString(3, "%" + filterVal + "%");
+		conn = createConnection();
+		String select = "SELECT Gegenstand.id, Gegenstand.Beschreibung, Ort, Gegenstand.Ueberbegriff_Id, Image, User_Id FROM Gegenstand inner join Ueberbegriff on Ueberbegriff.id = Gegenstand.Ueberbegriff_Id WHERE upper(Gegenstand.Beschreibung) LIKE upper(?) or upper(Ort) LIKE upper(?)"
+				+ "  or upper(Ueberbegriff.Bezeichnung) LIKE upper(?)";
+		PreparedStatement stmt = conn.prepareStatement(select);
+		stmt.setString(1, "%" + filterVal + "%");
+		stmt.setString(2, "%" + filterVal + "%");
+		stmt.setString(3, "%" + filterVal + "%");
 
-	        ResultSet rs = stmt.executeQuery();
-	        while (rs.next()) {
-	        	collGegenstaende.add(new Gegenstand(rs.getInt(1), getUeberbegriff(rs.getInt(4)),
-						rs.getString(2), rs.getString(3), rs.getBytes(5)));
-	        }
-	        conn.close();
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			collGegenstaende.add(new Gegenstand(rs.getInt(1), getUeberbegriff(rs.getInt(4)), rs.getString(2),
+					rs.getString(3), rs.getBytes(5), getUser(rs.getInt(6))));
+		}
+		conn.close();
 
-	        return collGegenstaende;
-	    }
+		return collGegenstaende;
+	}
+//----------------------------------_USer--------------------------------------
 
 	public void registerUser(User user) throws Exception {
 		conn = createConnection();
 		String select = "INSERT INTO User (Vorname, Nachname, Email, Passwort, IsAdmin) VALUES(?,?,?,?,?)";
-		
-        PreparedStatement stmt = conn.prepareStatement(select);
-        stmt.setString(1, user.getVorname());
-        stmt.setString(2, user.getNachname());
-        stmt.setString(3, user.getEmail());
-        if(!user.getPasswort().equals(user.getPasswort_wiederholen()))
-        	throw new Exception("pws dont match");
-        
-        user.setPasswort(Encrypth.hashPW(user.getPasswort()));
-        stmt.setString(4, user.getPasswort());
-        stmt.setBoolean(5,false);
-        stmt.execute();
-        conn.close();
-		
+
+		PreparedStatement stmt = conn.prepareStatement(select);
+		stmt.setString(1, user.getVorname());
+		stmt.setString(2, user.getNachname());
+		stmt.setString(3, user.getEmail());
+		if (!user.getPasswort().equals(user.getPasswort_wiederholen()))
+			throw new Exception("pws dont match");
+
+		System.out.println("ok:" + user.toString());
+		user.setPasswort(Encrypth.hashPW(user.getPasswort()));
+		stmt.setString(4, user.getPasswort());
+		if (user.getisAdmin())
+			stmt.setBoolean(5, true);
+		else
+			stmt.setBoolean(5, false);
+		stmt.execute();
+		conn.close();
+
 	}
 
 	public User loginUser(User user) throws Exception {
-		 conn = createConnection();
-	        String select = "SELECT * FROM User WHERE email=? and passwort=?";
-	        PreparedStatement stmt = conn.prepareStatement(select);
-	        stmt.setString(1, user.getEmail());
-	        stmt.setString(2, Encrypth.hashPW(user.getPasswort()));
-	        ResultSet rs = stmt.executeQuery();
-	        User foundUser = null;
-	        while (rs.next()) {
-	            foundUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),rs.getBoolean(6));
-	            
-	          
-	        }
-	        conn.close();
-	        return foundUser;
+		conn = createConnection();
+		String select = "SELECT * FROM User WHERE email=? and passwort=?";
+		PreparedStatement stmt = conn.prepareStatement(select);
+		stmt.setString(1, user.getEmail());
+		stmt.setString(2, Encrypth.hashPW(user.getPasswort()));
+		ResultSet rs = stmt.executeQuery();
+		User foundUser = null;
+		while (rs.next()) {
+			foundUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+					rs.getBoolean(6));
+
+		}
+		conn.close();
+		return foundUser;
 	}
-	
-	
+
+	public User getUser(int id) {
+		User result = null;
+
+		Connection conn = createConnection();
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM User WHERE id = ?");
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.first()) {
+				result = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getBoolean(6));
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return result;
+	}
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
