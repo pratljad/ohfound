@@ -11,10 +11,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("OhfoundMain.fxml"));
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("StartGui.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setTitle("ohFound!");
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -1,8 +1,8 @@
 package bll;
 
 import java.awt.Image;
+import java.sql.Blob;
 
-import com.mysql.jdbc.Blob;
 
 public class Gegenstand {
 	
@@ -10,19 +10,20 @@ public class Gegenstand {
 	private Ueberbegriff ueberbegriff;
 	private String beschreibung;
 	private String ort;
-	private Blob image;   //keine ahnung ob blob oder image
-	 
+	private byte[] image;   //keine ahnung ob blob oder image
+	private User user;
 	public Gegenstand() {
 		
 	}
 	
-	public Gegenstand(int id, Ueberbegriff ueberbegriff, String beschreibung, String ort, Blob image) {
+	public Gegenstand(int id, Ueberbegriff ueberbegriff, String beschreibung, String ort, byte[] image, User user) {
 		super();
 		this.id = id;
 		this.ueberbegriff = ueberbegriff;
 		this.beschreibung = beschreibung;
 		this.ort = ort;
 		this.image = image;
+		this.user = user;
 	}
 
 	public int getId() {
@@ -57,11 +58,20 @@ public class Gegenstand {
 		this.ort = ort;
 	}
 
-	public Blob getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(Blob image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
 }

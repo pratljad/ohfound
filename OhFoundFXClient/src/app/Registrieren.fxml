@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Registrieren">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="97.0" style="-fx-background-color: black;" />
+      <Pane layoutX="161.0" layoutY="14.0" prefHeight="57.0" prefWidth="356.0" style="-fx-background-color: white;">
+         <children>
+            <Label layoutX="42.0" layoutY="4.0" text="REGISTRIEREN">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Button fx:id="btnOK" layoutX="297.0" layoutY="341.0" mnemonicParsing="false" onAction="#btnOnActionOK" prefHeight="25.0" prefWidth="76.0" style="-fx-background-color: black;" text="OK" textFill="#fffefe" />
+      <RadioButton fx:id="rbAdmin" layoutX="105.0" layoutY="88.0" mnemonicParsing="false" onAction="#rbAdminOnAction" text="Admin">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </RadioButton>
+      <TextField fx:id="tfVorname" layoutX="105.0" layoutY="133.0" prefHeight="25.0" prefWidth="183.0" promptText="Vorname" />
+      <TextField fx:id="tfNachname" layoutX="356.0" layoutY="133.0" prefHeight="25.0" prefWidth="189.0" promptText="Nachname" />
+      <TextField fx:id="tfEmail" layoutX="105.0" layoutY="188.0" prefHeight="25.0" prefWidth="440.0" promptText="Email" />
+      <PasswordField fx:id="pfPasswort" layoutX="108.0" layoutY="240.0" prefHeight="25.0" prefWidth="177.0" promptText="Passwort" />
+      <PasswordField fx:id="tfPasswortWieder" layoutX="356.0" layoutY="240.0" prefHeight="25.0" prefWidth="189.0" promptText="Pass. Wiederholen" />
+   </children>
+</AnchorPane>
