@@ -16,10 +16,13 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "mongoose": "^5.7.12"
+    "hookrouter": "^1.2.3",
+    "mongoose": "^5.8.9",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-router-dom": "^5.1.2"
   },
   "devDependencies": {
-    "concurrently": "^5.0.0",
+    "concurrently": "^5.0.2",
     "nodemon": "^1.19.4"
   }
 }

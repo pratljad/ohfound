@@ -9,6 +9,14 @@ module.exports = (app) => {
     return res.status(200).send(locations);
   });
 
+  app.get(`/api/location/:locname`, async (req, res) => {
+    const {locname} = req.params;
+
+    let location = await Location.find({loc_name: locname});
+    console.log("AWAIT SINGLE LOCATION: " + location);
+    return res.status(200).send(location);
+  });
+
   app.post(`/api/location`, async (req, res) => {
     let location = await Location.create(req.body);
     return res.status(201).send({

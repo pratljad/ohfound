@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-
+import { Route, Switch } from 'react-router-dom';
 // SERVICES
 import userService from './services/userService';
-import LocationComponent from './components/location/location-component';
-import InseratDisplayComponent from './components/inserat/inserat-display-component';
-import FreigabeDisplayComponent from './components/freigabe/freigabe-display-component';
-import ArtikelDisplayComponent from './components/artikel/artikel-display-component';
+//import LocationComponent from './components/location/location-component';
+//import InseratDisplayComponent from './components/inserat/inserat-display-component';
+//import FreigabeDisplayComponent from './components/freigabe/freigabe-display-component';
+//import ArtikelDisplayComponent from './components/artikel/artikel-display-component';
+import LandingPage from './pages/landing-page/landing-page.js';
 import MapComponent from './components/map/map-component.js';
+import NotFoundPage from './pages/not-found/not-found-page.js';
 
 function App() {
   const [users, setUsers] = useState(null);
@@ -45,9 +47,13 @@ function App() {
   }
   return (
     <div className="App">
+      <Switch>
+        
+        <Route path="/map" component={MapComponent} exact />
+        <Route path="/notfound" component={NotFoundPage} />
+        <Route path="/" component={LandingPage} />
+      </Switch>
       
-      
-      <MapComponent />
     </div>
   );
 }

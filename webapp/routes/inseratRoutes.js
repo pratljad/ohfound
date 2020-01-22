@@ -9,6 +9,7 @@ module.exports = (app) => {
     return res.status(200).send(inserate);
   });
 
+    
   app.post(`/api/inserat`, async (req, res) => {
     let inserat = await Inserates.create(req.body);
     return res.status(201).send({
