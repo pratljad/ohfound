@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:controller="app.StartGuiController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="493.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="61.0" layoutY="205.0" prefHeight="54.0" prefWidth="514.0" text="Willkommen bei OhFound!" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="44.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="115.0" fitWidth="121.0" layoutX="261.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="261.0" AnchorPane.rightAnchor="224.0">
+         <image>
+            <Image url="@../pic/OhFound1.jpg" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnLogin" layoutX="81.0" layoutY="364.0" mnemonicParsing="false" onAction="#btnLoginOnAction" prefHeight="28.0" prefWidth="115.0" style="-fx-background-image: white;" text="Login">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRegistrieren" layoutX="406.0" layoutY="364.0" mnemonicParsing="false" onAction="#btnRegistrierenOnAction" prefHeight="28.0" prefWidth="115.0" style="-fx-background-image: white;" text="Registrieren">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
