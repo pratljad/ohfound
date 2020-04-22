@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="ohFound_Client.Aktivitäten"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ohFound_Client"
+             mc:Ignorable="d" 
+             d:DesignHeight="410" d:DesignWidth="780">
+    <Grid>
+        <Label Content="Aktivitäten-Überwachung" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="334"/>
+        <Button Content="Verdächtigkeitsgrad erhöhen" Click="Increase_Click" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="186"/>
+        <Button Content="Verdächtigkeitsgrad senken" Click="Decrease_Click" HorizontalAlignment="Left" Margin="201,195,0,0" VerticalAlignment="Top" Width="185"/>
+        <Label Content="Belastete Benutzer" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Width="289"/>
+        <Button Content="Benutzerkonto sperren" HorizontalAlignment="Left" Margin="10,364,0,0" VerticalAlignment="Top" Width="140" Height="22" Click="LockAccount_Click"/>
+        <Button Content="Fertig" HorizontalAlignment="Left" Margin="695,380,0,0" VerticalAlignment="Top" Width="75" Click="Fertig_Click"/>
+        <DataGrid x:Name="dg_activity" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="149" Margin="10,41,0,0" VerticalAlignment="Top" Width="732" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Activity ID" Binding="{Binding Activity_id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Account ID" Binding="{Binding Account_id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Account name" Binding="{Binding Account_name}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="dg_accounts" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="107" Margin="10,251,0,0" VerticalAlignment="Top" Width="732" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Account ID" Binding="{Binding Account_id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Username" Binding="{Binding Username}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Firstname" Binding="{Binding Firstname}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Lastname" Binding="{Binding Lastname}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Organizationname" Binding="{Binding Organizationname}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Locked" Binding="{Binding Locked}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Suspicion Level" Binding="{Binding Suspicion_level}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>
