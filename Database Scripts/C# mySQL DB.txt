@@ -1,0 +1,75 @@
+DROP DATABASE IF EXISTS `OHFOUND`;  
+CREATE DATABASE `OHFOUND`;
+
+CREATE TABLE `OHFOUND`.Accounts (
+	account_id INTEGER,
+	username VARCHAR(32),
+	pwd VARCHAR(32),
+	firstname VARCHAR(32),
+	lastname VARCHAR(32),
+	organizationname VARCHAR(32),
+	locked BOOLEAN,
+	suspicion_level INTEGER,
+	PRIMARY KEY (account_id)
+);
+
+CREATE TABLE `OHFOUND`.Activities (
+	activity_id INTEGER,
+	category VARCHAR(32),
+	account_id INTEGER,
+	account_name VARCHAR(32),
+	PRIMARY KEY (activity_id),
+	FOREIGN KEY (account_id) REFERENCES `OHFOUND`.Account(account_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE `OHFOUND`.Items (
+	item_id INTEGER,
+	title VARCHAR(16),
+	description VARCHAR(64),
+	published DATE,
+    marked_for_deletion BOOLEAN,
+	PRIMARY KEY (item_id)
+);
+
+CREATE TABLE `OHFOUND`.Requests (
+	request_id INTEGER,
+	useraccount_id INTEGER,
+	organization_id INTEGER,
+	item_id INTEGER,
+	denied BOOLEAN,
+	opposed BOOLEAN,
+	approved BOOLEAN,
+	PRIMARY KEY (request_id),
+	FOREIGN KEY (useraccount_id) REFERENCES `OHFOUND`.Account(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (organization_id) REFERENCES `OHFOUND`.Account(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (item_id) REFERENCES `OHFOUND`.Item(item_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO `OHFOUND`.Accounts (account_id, username, pwd, firstname, lastname, organizationname, locked, suspicion_level) VALUES (1, 'mikulaf', 'pws!123', 'Florian','Mikula', null, false, 0);
+INSERT INTO `OHFOUND`.Accounts (account_id, username, pwd, firstname, lastname, organizationname, locked, suspicion_level) VALUES (2, 'musterm', 'musterpasswort', 'Max','Mustermann', null, false, 0);
+INSERT INTO `OHFOUND`.Accounts (account_id, username, pwd, firstname, lastname, organizationname, locked, suspicion_level) VALUES (3, 'musterf', 'topsecret!321', 'Margarethe','Musterfrau', null, false, 0);
+INSERT INTO `OHFOUND`.Accounts (account_id, username, pwd, firstname, lastname, organizationname, locked, suspicion_level) VALUES (4, 'htl-vil', '0123456789', null, null, 'htl villach fundbüro', false, 0);
+
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (1, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (2, 'Artikel angeschaut', 1, 'mikulaf');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (3, 'Anfrage', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (4, 'Anfrage', 1, 'mikulaf');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (5, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (6, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (7, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (8, 'Anfrage', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (9, 'Anfrage', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (10, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (11, 'Artikel angeschaut', 2, 'musterm');
+INSERT INTO `OHFOUND`.Activities (activity_id, category, account_id, account_name) VALUES (12, 'Artikel angeschaut', 2, 'musterm');
+
+INSERT INTO `OHFOUND`.Items (item_id, title, description, published, marked_for_deletion) VALUES (1, 'Schlüssel', 'Schlüsselbund mit Fußball Anhänger', '2020-02-06', false);
+INSERT INTO `OHFOUND`.Items (item_id, title, description, published, marked_for_deletion) VALUES (2, 'Handy', 'Apple Iphone 1X', '2020-01-12', true);
+INSERT INTO `OHFOUND`.Items (item_id, title, description, published, marked_for_deletion) VALUES (3, 'Brieftasche', 'Lederbrieftasche', '2020-03-09', false);
+INSERT INTO `OHFOUND`.Items (item_id, title, description, published, marked_for_deletion) VALUES (4, 'Handtasche', 'Krokodillederhandtasche', '2020-02-11', true);
+
+INSERT INTO `OHFOUND`.Requests (request_id, useraccount_id, organization_id, item_id, denied, opposed, approved) VALUES (1, 2, 4, 1, true, true, null);
+INSERT INTO `OHFOUND`.Requests (request_id, useraccount_id, organization_id, item_id, denied, opposed, approved) VALUES (2, 2, 4, 2, true, true, null);
+INSERT INTO `OHFOUND`.Requests (request_id, useraccount_id, organization_id, item_id, denied, opposed, approved) VALUES (3, 2, 4, 3, true, true, null);
+
+COMMIT;
